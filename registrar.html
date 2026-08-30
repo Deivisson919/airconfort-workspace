@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro Air Confort</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="Register/style.css">
+</head>
+
+<body>
+    <div class="registrar-container">
+        <div class="card">
+            <div class="logo-container">
+                <img src="../Register/img/logo-evaporadora.jpeg" alt="Logo Air Confort" class="logo-img">
+                <h1><span class="black-text">AIR</span> CONFORT</h1>
+            </div>
+
+            <p class="subtitle">SOLUÇÕES EM CLIMATIZAÇÃO</p>
+
+            <h2>Crie sua conta</h2>
+
+            <a href="login.html" class="nav-link">Já tem uma conta? Entrar</a>
+
+            <form>
+                <input type="email" placeholder="E-mail" required>
+
+                <div class="password-container">
+                    <input type="password" id="senha" placeholder="Senha" required>
+                    <i class="fa-regular fa-eye toggle-password" id="toggleSenha"></i>
+                </div>
+
+                <div class="password-container">
+                    <input type="password" id="confirmar-senha" placeholder="Confirmar senha" required>
+                    <i class="fa-regular fa-eye toggle-password" id="toggleConfirmarSenha"></i>
+                </div>
+
+                <button type="submit" class="register-btn">Registrar-se</button>
+            </form>
+
+            <div class="divider">
+                <h1>Ou</h1>
+            </div>
+
+            <button type="button" class="google-btn">
+                <img src="../Register/img/logo-google.png" alt="Google" class="google-icon">
+                Registrar-se com o Google
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function configurarOlhoSenha(idInput, idIcone) {
+            const input = document.getElementById(idInput);
+            const icone = document.getElementById(idIcone);
+
+            icone.addEventListener('click', function () {
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icone.classList.remove('fa-eye');
+                    icone.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icone.classList.remove('fa-eye-slash');
+                    icone.classList.add('fa-eye');
+                }
+            });
+        }
+
+        configurarOlhoSenha('senha', 'toggleSenha');
+        configurarOlhoSenha('confirmar-senha', 'toggleConfirmarSenha');
+    </script>
+</body>
+
+</html>

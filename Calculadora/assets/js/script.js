@@ -1,0 +1,1354 @@
+let indexEditando = null;
+let detalheArea = 0;
+let detalhePessoas = 0;
+let detalheEletronicos = 0;
+let detalhePortas = 0;
+let detalheJanelas = 0;
+let detalheSol = 0;
+let detalheForro = 0;
+let detalheParedes = 0;
+
+let largura = 0;
+let comprimento = 0;
+let pessoas = 0;
+let eletronicos = 0;
+let portas = 0;
+let janelas  = 0;
+let tipoJanela = "";
+let sol = "";
+let tipoPorta = ""; 
+let frequenciaPorta = "";
+let forro = "";
+let btuTotal = 0;
+let nomeAmbiente = "";
+
+let area = 0;
+let paredes = 0;
+let qtdPessoas = 0;
+let qtdEletronicos = 0;
+let qtdPortas = 0;
+let qtdJanelas = 0;
+let resultadoFinal = 0;
+
+let sistemaProjeto = {};
+let rec = {};
+let projeto = {};
+let distribuicaoSelecionada = "";
+let nomeCliente = "";
+let calculoSol = "";
+let calculoJanela = "";
+let calculoForro =""; 
+let dataProjeto = "";
+let resultadoDistribuicao = "";
+
+const capacidades = [9000, 12000, 18000, 24000, 30000, 36000, 48000, 60000];
+const LIMITE_DISTRIBUICAO = 180000;
+
+function abrirTela(idTela){
+
+  // Fecha o menu
+  fecharMenu();
+
+  const telas = document.querySelectorAll("#app > section");
+
+  telas.forEach(tela => {
+     tela.style.display = "none";
+  });
+
+  const telaSelecionada = document.getElementById(idTela);
+
+  telaSelecionada.style.display = "block";
+
+  animarTela(telaSelecionada);
+}
+
+function animarTela(elemento) {
+  elemento.classList.remove("abrir");
+  void elemento.offsetWidth;
+  elemento.classList.add("abrir")
+}
+
+function fecharMenu() {
+  const menu = document.getElementById("menuDropdown");
+  menu.classList.remove("show");
+}
+
+function toggleMenu() {
+  const menu = document.getElementById("menuDropdown");
+  menu.classList.toggle("show");
+}
+
+window.addEventListener("click", fecharMenuAoClicarFora);
+
+function fecharMenuAoClicarFora(e){
+  if (!e.target.closest(".menu-container")){
+    document.getElementById("menuDropdown").classList.remove("show");
+  }
+}
+
+function parseNumero(valor) {
+  if (!valor) return NaN;
+  valor = valor.toString().trim();
+  if (valor.includes(',')) {
+    valor = valor.replace(/\./g, '').replace(',', '.');
+  }
+  return parseFloat(valor);
+}
+
+function calcularBTU() {
+
+  let nomeInput = document.getElementById("nomeAmbiente");
+   nomeAmbiente = nomeInput ? nomeInput.value.trim() : "";
+  if (!nomeAmbiente) nomeAmbiente = "Ambiente";
+
+   largura = parseNumero(document.getElementById("largura").value);
+   comprimento = parseNumero(document.getElementById("comprimento").value);
+
+  area = largura * comprimento;
+
+   pessoas = parseInt(document.getElementById("pessoas").value) || 0;
+   eletronicos = parseInt(document.getElementById("eletronicos").value) || 0;
+   portas = parseInt(document.getElementById("portas").value) || 0;
+   janelas = parseInt(document.getElementById("janelas").value) || 0;
+
+  paredes = parseInt(document.getElementById("paredes").value) || 0;
+
+   tipoJanela = document.getElementById("janela").value;
+   sol = document.getElementById("sol").value;
+   forro = document.getElementById("forro").value;
+   tipoPorta = document.getElementById("tipoPorta").value;
+   frequenciaPorta = document.getElementById("frequenciaPorta").value;
+
+  // 🔴 VALIDAÇÕES
+  let inputLargura = document.getElementById("largura");
+  let inputComprimento = document.getElementById("comprimento");
+  let inputSol = document.getElementById("sol");
+  let inputJanela = document.getElementById("janela");
+  let  inputParedes = document.getElementById("paredes");
+  let inputJanelas = document.getElementById("janelas");
+
+
+  if (!largura || largura <= 0) {
+    inputLargura.classList.add("erro");
+    return false;
+  } else {
+    inputLargura.classList.remove("erro");
+  }
+
+  if (!comprimento || comprimento <= 0) {
+    inputComprimento.classList.add("erro");
+    return false;
+  } else {
+    inputComprimento.classList.remove("erro");
+  }
+
+  if (paredes > 0 && sol === "") {
+    inputSol.classList.add("erro");
+    return false;
+  } else {
+    inputSol.classList.remove("erro");
+  }
+  
+  if(sol !== "" && paredes <= 0){
+      inputParedes.classList.add("erro");
+      return false;
+  } else{
+    inputParedes.classList.remove("erro")
+  }
+
+  if (janelas > 0 && tipoJanela === "") {
+    inputJanela.classList.add("erro");
+    return false;
+  } else {
+    inputJanela.classList.remove("erro");
+  }
+
+  if(tipoJanela !== "" && janelas<= 0) {
+      inputJanelas.classList.add("erro");
+      return false; 
+  } else{
+      inputJanelas.classList.remove("erro");
+  }
+
+  let pessoasExtra = pessoas > 1 ? pessoas - 1 : 0;
+
+  // 🔹 DETALHAMENTO PDF
+
+   btuTotal =
+    (area * 600) +
+    (pessoasExtra * 600) +
+    (eletronicos * 600) +
+    detalhePortas
+
+    
+detalhePortas = 0;
+calculoPortas = "Sem portas";
+
+  let btuPorta = 0; 
+  let fatorFrequencia = 1;
+
+if (portas > 0 && tipoPorta && frequenciaPorta) {
+
+
+  if (tipoPorta === "comum") {
+      btuPorta	= 400;
+  }
+
+  if (tipoPorta === "vidro"){
+    btuPorta = 800;
+  }
+  
+  if (tipoPorta === "vitrine"){
+    btuPorta = 800;
+  }
+
+  if (tipoPorta === "automatica"){
+    btuPorta = 1500;
+  }
+
+  // frequencia abertura
+  if (frequenciaPorta === "baixa"){
+      fatorFrequencia = 1;
+  }
+
+  if (frequenciaPorta === "media"){
+      fatorFrequencia = 1.25;
+  }
+
+  if (frequenciaPorta === "alta") {
+    fatorFrequencia = 1.5;
+  }
+
+  detalhePortas = portas * btuPorta * fatorFrequencia;
+  calculoPortas = `${portas} portas(s)`;
+
+}
+
+
+  // 🔹 JANELAS
+  detalheJanelas = 0;
+  qtdJanelas = 0;
+  calculoJanela  = "Sem janela";
+
+  if (tipoJanela && janelas > 0) {
+
+    qtdJanelas = janelas;
+    let textoJanela = ""
+
+    if (tipoJanela === "1") {
+      textoJanela = qtdJanelas === 1 ? "pequena x 400 BTU/Unidade" : "pequenas x 400 BTU/Unidade";
+      detalheJanelas = janelas * 400;
+    }
+
+    if (tipoJanela === "2") {
+      textoJanela = qtdJanelas === 1 ? "média x 800 BTU/Unidade" : "médias x 800 BTU/Unidade";
+      detalheJanelas = janelas * 800;
+    }
+
+    if (tipoJanela === "3") {
+      textoJanela = qtdJanelas === 1 ? "grande x 1200 BTU/Unidade" : "grandes x 1200 BTU/Unidade";
+      detalheJanelas = janelas * 1200;
+    }
+    btuTotal += detalheJanelas;
+    calculoJanela = `${qtdJanelas} ${textoJanela}`;
+  }
+
+  // 🔹 PAREDES
+  detalheParedes = paredes * 800;
+  btuTotal += detalheParedes;
+
+  // 🔹 SOL
+  detalheSol = 0;
+  calculoSol = "Sem insolação"
+
+  if (paredes > 0 && sol) {
+
+    if (sol === "1") { 
+        calculoSol = `Sol o dia todo + 10%`
+        detalheSol = btuTotal * 0.10;
+        btuTotal += detalheSol;
+    }
+
+    if (sol === "2") {
+        calculoSol = `Meio período + 5%`
+        detalheSol = btuTotal * 0.05;
+        btuTotal += detalheSol;
+    }
+
+  }
+
+  // 🔹 FORRO
+  detalheForro = 0;
+  calculoForro = "Forrado"
+  if (forro === "1") {
+    calculoForro = " Sem forro + 800 BTUs";
+    detalheForro = 800;
+    btuTotal += detalheForro;
+  }
+
+  btuTotal = Math.ceil(btuTotal);
+
+  // 📊 RESULTADO
+  document.getElementById("resultado").innerHTML =
+    `📍 <strong>${nomeAmbiente}</strong><br>
+     🔥 <strong>${btuTotal.toLocaleString("pt-BR")} BTUs</strong>`;
+
+  // 🧠 RENDER
+  resultadoFinal = btuTotal;
+
+  renderResultado(btuTotal, pessoas);
+
+  // 💾 SALVAR
+  rec = recomendacaoFinal(btuTotal);
+  dataProjeto = new Date().toLocaleDateString("pt-BR");
+
+  return true;
+}
+
+function calcularMemorial() {
+
+  let pessoasExtra = pessoas > 1 ? pessoas - 1 : 0;
+
+  
+  let btuMemorial =
+    (area * 600) +
+    (pessoasExtra * 600) +
+    (eletronicos * 600) +
+    detalhePortas;
+
+  // DETALHES
+  detalheArea = area * 600;
+  detalhePessoas = pessoasExtra * 600;
+  detalheEletronicos = eletronicos * 600;
+
+  qtdPessoas = pessoasExtra;
+  qtdEletronicos = eletronicos;
+  qtdPortas = portas;
+
+  detalheJanelas = 0;
+  qtdJanelas = 0;
+  calculoJanela = "Sem janela";
+
+  if (tipoJanela && janelas > 0) {
+
+    qtdJanelas = janelas;
+
+    let textoJanela = "";
+
+    if (tipoJanela === "1") {
+      textoJanela = janelas === 1
+        ? "pequena x 400 BTU/Unidade"
+        : "pequenas x 400 BTU/Unidade";
+
+      detalheJanelas = janelas * 400;
+    }
+
+    if (tipoJanela === "2") {
+      textoJanela = janelas === 1
+        ? "média x 800 BTU/Unidade"
+        : "médias x 800 BTU/Unidade";
+
+      detalheJanelas = janelas * 800;
+    }
+
+    if (tipoJanela === "3") {
+      textoJanela = janelas === 1
+        ? "grande x 1200 BTU/Unidade"
+        : "grandes x 1200 BTU/Unidade";
+
+      detalheJanelas = janelas * 1200;
+    }
+
+    btuMemorial += detalheJanelas;
+
+    calculoJanela = `${qtdJanelas} ${textoJanela}`;
+  }
+
+
+  // PAREDES
+  detalheParedes = paredes * 800;
+
+  btuMemorial += detalheParedes;
+
+
+  // INSOLAÇÃO
+  detalheSol = 0;
+  calculoSol = "Sem insolação";
+
+  if (paredes > 0 && sol) {
+
+    if (sol === "1") {
+
+      calculoSol = "Sol o dia todo + 10%";
+
+      detalheSol = btuMemorial * 0.10;
+
+      btuMemorial += detalheSol;
+    }
+
+    if (sol === "2") {
+
+      calculoSol = "Meio período + 5%";
+
+      detalheSol = btuMemorial * 0.05;
+
+      btuMemorial += detalheSol;
+    }
+  }
+
+
+  // FORRO
+  detalheForro = 0;
+  calculoForro = "Forrado";
+
+  if (forro === "1") {
+
+    calculoForro = "Sem forro + 800 BTUs";
+
+    detalheForro = 800;
+
+    btuMemorial += detalheForro;
+  }
+
+  return Math.ceil(btuMemorial);
+}
+
+function salvarProjeto() {
+  salvarCalculo({
+    data: new Date().toLocaleDateString("pt-BR"),
+    nome: nomeAmbiente,
+    nomeCliente,
+    largura,
+    comprimento,
+    area,
+    pessoas,
+    eletronicos,
+    tipoPorta,
+    frequenciaPorta,
+    portas,
+    janelas,
+    paredes,
+    tipoJanela,
+    sol,
+    forro,
+    btu: btuTotal,
+
+    sistema: sistemaProjeto.sistema,
+    categoria: sistemaProjeto.categoria,
+    observacao: sistemaProjeto.observacao,
+    tipoDistribuicao: distribuicaoSelecionada,
+
+    distribuicao: rec.tipo === "distribuicao" ? {
+      tipoSelecionado: distribuicaoSelecionada,
+      aberto: rec.aberto,
+      divisoes: rec.divisoes,
+      fluxo: rec.fluxo
+    } : null
+  });
+}
+
+function resetarTela(){
+indexEditando = null;
+modoVisualizacao = false;
+
+carregarHistorico();
+
+setTimeout(() => {
+  limparFormulario();
+}, 100);
+
+let btn = document.getElementById("btnCalcular");
+btn.innerText = "Calcular";
+
+}
+
+function criarPDF(){
+
+  montarPDF();
+
+}
+
+
+// 🔧 CLASSIFICAÇÃO
+function classificarProjeto(btuTotal, pessoas) {
+  if (btuTotal <= 18000 && pessoas <= 5) {
+    return { tipo: "Residencial", nivel: "Baixa complexidade", alerta: "" };
+  }
+  if (btuTotal <= 36000 && pessoas <= 15) {
+    return { tipo: "Residencial / Comercial leve", nivel: "Média complexidade", alerta: "" };
+  }
+  if (btuTotal <= 60000 && pessoas <= 50) {
+    return { tipo: "Comercial leve", nivel: "Atenção técnica", alerta: "Verifique instalação elétrica." };
+  }
+  if (btuTotal <= 120000 && pessoas <= 100) {
+    return { tipo: "Comercial", nivel: "Alta complexidade", alerta: "Recomendado suporte técnico." };
+  }
+  return {
+    tipo: "Comercial pesado",
+    nivel: "Projeto profissional",
+    alerta: "Recomendado engenheiro e sistema central."
+  };
+}
+
+function renderResultado(btuTotal, pessoas, area = 0) {
+
+  projeto = classificarProjeto(btuTotal, pessoas);
+  let diagnostico = diagnosticoSistema(btuTotal);
+  sistemaProjeto = definirSistema(btuTotal, pessoas, area);
+  rec = recomendacaoFinal(btuTotal);
+
+  let recomendacaoDiv = document.getElementById("recomendacao");
+  let distribuicaoDiv = document.getElementById("distribuicao");
+  let boxDistribuicao = document.getElementById("boxDistribuicao");
+
+  let recomendacaoHTML = "";
+
+  // 🧹 limpa antes de renderizar
+  recomendacaoDiv.innerHTML = "";
+  distribuicaoDiv.innerHTML = "";
+
+  // 🔹 CASO SIMPLES
+  if (rec.tipo === "simples") {
+
+    recomendacaoHTML = `
+      🔧 <strong>Recomendado:</strong><br>
+      ${rec.texto}<br><br>
+    `;
+
+    // 🔴 esconde box distribuição
+    if (boxDistribuicao) {
+      boxDistribuicao.style.display = "none";
+    }
+  }
+
+  // 🔹 CASO LIMITE HVAC
+  if (rec.tipo === "limite") {
+
+    // 🔴 esconde distribuição
+    if (boxDistribuicao) {
+      boxDistribuicao.style.display = "none";
+    }
+
+    recomendacaoHTML = `
+      ⚠️ <strong>Cálculo máximo suportado: 180.000 BTUs</strong><br><br>
+
+      ${rec.alerta}<br><br>
+
+    `;
+  }
+
+  // 🔹 CASO DISTRIBUIÇÃO
+  if (rec.tipo === "distribuicao") {
+
+    // 🟢 mostra distribuição
+    if (boxDistribuicao) {
+      boxDistribuicao.style.display = "block";
+    }
+
+    distribuicaoDiv.innerHTML = `
+      📌 <strong>Cálculo total:</strong>
+      ${btuTotal.toLocaleString("pt-BR")} BTUs<br><br>
+
+      🌬️ <strong>Espaço aberto:</strong><br><br>
+      ${rec.aberto.texto}<br><br>
+
+      <strong>Capacidade do sistema:</strong>
+      ${rec.aberto.total.toLocaleString("pt-BR")} BTUs<br><br>
+
+      🏢 <strong>Média dificuldade de circulação:</strong><br><br>
+      ${rec.divisoes.texto}<br><br>
+
+      <strong>Capacidade do sistema:</strong>
+      ${rec.divisoes.total.toLocaleString("pt-BR")} BTUs<br><br>
+
+      🧱 <strong>Grande dificuldade de circulação:</strong><br><br>
+      ${rec.fluxo.texto}<br><br>
+
+      <strong>Capacidade do sistema:</strong>
+      ${rec.fluxo.total.toLocaleString("pt-BR")} BTUs<br><br>
+    `;
+  }
+
+  // 🧠 BLOCO PRINCIPAL
+  recomendacaoDiv.innerHTML = `
+
+    ${recomendacaoHTML}
+
+    🏗️ <strong>Sistema recomendado:</strong><br>
+    ${sistemaProjeto.sistema}<br><br>
+
+    🏢 <strong>Categoria do projeto:</strong><br>
+    ${sistemaProjeto.categoria}<br><br>
+
+    📝 <strong>Análise técnica:</strong><br>
+    ${sistemaProjeto.observacao}<br><br>
+
+    ${diagnostico.alerta ? `
+      ⚠️ ${diagnostico.alerta}<br><br>
+    ` : ""}
+
+    ${projeto.alerta ? `
+      ⚠️ ${projeto.alerta}<br><br>
+    ` : ""}
+  `;
+
+  renderBotaoPDF(rec.tipo);
+}
+
+function combinarBTU(btu, modo = "normal") {
+
+  let capacidadesModo;
+
+  if (modo === "media") {
+    capacidadesModo = [36000, 30000, 24000, 18000, 12000, 9000];
+  } 
+  else if (modo === "dificil") {
+    capacidadesModo = [60000, 48000, 36000, 30000, 24000, 18000, 12000, 9000];
+  } 
+  else {
+    capacidadesModo = [48000, 36000, 30000, 24000, 18000, 12000, 9000];
+  }
+
+  let melhor = null;
+
+  // 🔥 testa combinações inteligentes
+  for (let a of capacidadesModo) {
+    for (let b of [0, ...capacidadesModo]) {
+      for (let c of [0, ...capacidadesModo]) {
+        for (let d of [0, ...capacidadesModo]) {
+
+          let lista = [a, b, c, d].filter(x => x > 0);
+
+          let total = lista.reduce((soma, v) => soma + v, 0);
+
+          // precisa atingir o BTU mínimo
+          if (total < btu) continue;
+
+          let sobra = total - btu;
+
+          // quantidade de aparelhos
+          let qtd = lista.length;
+
+          // 🔥 score principal
+          let score = sobra + (qtd * 2000);
+
+          // penaliza excesso de aparelhos
+          if (qtd >= 4) {
+            score += 4000;
+          }
+
+          // penaliza distribuição desbalanceada
+          let maior = Math.max(...lista);
+          let menor = Math.min(...lista);
+
+          if ((maior - menor) >= 40000) {
+            score += 5000;
+          }
+
+          // evita muitos aparelhos pequenos
+          let pequenos = lista.filter(x => x <= 12000).length;
+
+          if (pequenos >= 2) {
+            score += 3000;
+          }
+
+          // prioriza combinações comerciais limpas
+          let unicos = [...new Set(lista)];
+
+          if (unicos.length === 1 && qtd >= 2) {
+            score -= 1500;
+          }
+
+          if (!melhor || score < melhor.score) {
+
+            melhor = {
+              lista,
+              total,
+              sobra,
+              score
+            };
+
+          }
+        }
+      }
+    }
+  }
+
+  // 🔒 fallback
+  if (!melhor) {
+    return {
+      texto: "⚠️ Não foi possível gerar uma distribuição.",
+      total: 0
+    };
+  }
+
+  // 📊 agrupar aparelhos iguais
+  let agrupado = {};
+
+  melhor.lista.forEach(cap => {
+    agrupado[cap] = (agrupado[cap] || 0) + 1;
+  });
+
+  let resultado = [];
+
+  Object.keys(agrupado)
+    .sort((a, b) => b - a)
+    .forEach(cap => {
+
+      resultado.push(
+        `${agrupado[cap]} aparelho(s) de ${Number(cap).toLocaleString("pt-BR")} BTUS`
+      );
+
+    });
+
+  return {
+    texto: resultado.join("<br>"),
+    total: melhor.total
+  };
+}
+
+function recomendacaoFinal(btuTotal) {
+
+  if (btuTotal > LIMITE_DISTRIBUICAO) {
+    return {
+      tipo: "limite",
+      alerta: "Projeto acima do limite da distribuição automática.",
+      sistema: "VRF / Sistema Central"
+    };
+  }
+
+  // 🔹 recomendações simples
+
+  if (btuTotal <= 9000) {
+    return {
+      tipo: "simples",
+      texto: "1 aparelho de 9.000 BTUS"
+    };
+  }
+
+  if (btuTotal <= 12000) {
+    return {
+      tipo: "simples",
+      texto: "1 aparelho de 12.000 BTUS"
+    };
+  }
+
+  if (btuTotal <= 18000) {
+    return {
+      tipo: "simples",
+      texto: "1 aparelho de 18.000 BTUS"
+    };
+  }
+
+  if (btuTotal <= 24000) {
+    return {
+      tipo: "simples",
+      texto: "1 aparelho de 24.000 BTUS"
+    };
+  }
+
+  // 🔥 cálculo inteligente dos cenários
+  function calcularExtra(base, fator, limiteExtra) {
+
+    let extra = base * (fator - 1);
+
+    // limita exagero
+    if (extra > limiteExtra) {
+      extra = limiteExtra;
+    }
+
+    let resultado = base + extra;
+
+    return Math.ceil(resultado);
+  }
+
+  // 🌬️ espaço aberto
+  let abertoBTU = btuTotal;
+
+  // 🏢 média circulação
+  let medioBTU = calcularExtra(btuTotal, 1.10, 10000);
+
+  // 🧱 circulação difícil
+  let dificilBTU = calcularExtra(btuTotal, 1.18, 16000);
+
+  // 🔥 distribuição inteligente
+  let aberto = combinarBTU(abertoBTU, "normal");
+
+  let divisoes = combinarBTU(medioBTU, "media");
+
+  let fluxo = combinarBTU(dificilBTU, "dificil");
+
+  // 🔒 garante progressão lógica
+  if (divisoes.total <= aberto.total) {
+
+    divisoes = combinarBTU(aberto.total + 9000, "media");
+
+  }
+
+  if (fluxo.total <= divisoes.total) {
+
+    fluxo = combinarBTU(divisoes.total + 9000, "dificil");
+
+  }
+
+  return {
+    tipo: "distribuicao",
+    aberto,
+    divisoes,
+    fluxo
+  };
+}
+
+function definirSistema(btuTotal, pessoas, area) {
+
+  // 🟢 Residencial
+  if (btuTotal <= 36000) {
+    return {
+      sistema: "Split Hi-Wall",
+      categoria: "Residencial",
+      observacao: "Ideal para ambientes pequenos e médios."
+    };
+  }
+
+  // 🟡 Comercial leve
+  if (btuTotal <= 90000) {
+    return {
+      sistema: "Split Piso Teto ou Cassete",
+      categoria: "Comercial leve",
+      observacao: "Melhor distribuição de ar para ambientes amplos."
+    };
+  }
+
+  // 🟠 Comercial médio
+  if (btuTotal <= 180000) {
+    return {
+      sistema: "Múltiplos Piso Teto / Cassete",
+      categoria: "Comercial médio",
+      observacao: "Recomendado balanceamento por setores."
+    };
+  }
+
+  // 🔴 Comercial pesado
+  if (btuTotal <= 300000) {
+    return {
+      sistema: "VRF ou Dutado",
+      categoria: "Projeto profissional",
+      observacao: "Necessário pré-projeto técnico."
+    };
+  }
+
+  // ⚫ Grande porte
+  return {
+    sistema: "Chiller / Sistema Central",
+    categoria: "Engenharia HVAC",
+    observacao: "Obrigatório projeto especializado."
+  };
+}
+
+
+// 🧠 DIAGNÓSTICO
+function diagnosticoSistema(btuTotal) {
+  if (btuTotal <= 120000) {
+    return { nivel: "Confiável", cor: "#22c55e", sistema: "Ar-condicionado Split", alerta: "" };
+  }
+  if (btuTotal <= 200000) {
+    return { nivel: "Atenção", cor: "#f59e0b", sistema: "Múltiplos Splits", alerta: "Projeto exige análise mais detalhada." };
+  }
+  if (btuTotal <= 250000) {
+    return { nivel: "Limite técnico", cor: "#f97316", sistema: "VRF ou múltiplos Splits", alerta: "Alto nível de carga térmica." };
+  }
+  return {
+    nivel: "Projeto profissional",
+    cor: "#ef4444",
+    sistema: "Sistema central (VRF / Chiller)",
+    alerta: "Obrigatório projeto técnico completo."
+  };
+}
+
+// 💾 SALVAR / HISTÓRICO 
+function salvarCalculo(dados) {
+  let historico = JSON.parse(localStorage.getItem("historicoBTU")) || [];
+
+  if (indexEditando !== null) {
+    historico[indexEditando] = dados;
+    indexEditando = null;
+  } else {
+    historico.push(dados);
+  }
+
+  localStorage.setItem("historicoBTU", JSON.stringify(historico));
+}
+
+function verItem(index) {
+
+  modoVisualizacao = true;
+
+  let btn = document.getElementById("btnCalcular");
+  btn.innerText = "Voltar";
+
+  let historico = JSON.parse(localStorage.getItem("historicoBTU")) || [];
+  let item = historico[index];
+  resultadoFinal = item.btu;
+
+  
+  resultadoFinal = item.btu;
+  
+  
+  dataProjeto = item.data;
+  if (!item) {
+    mostrarAviso("Item não encontrado.");
+    return;
+  }
+
+  dataProjeto = item.data || "";
+
+  nomeCliente = item.nomeCliente || "";
+
+  largura = Number(item.largura) || 0;
+  comprimento = Number(item.comprimento) || 0;
+  area = Number(item.area) || (largura * comprimento);
+
+  pessoas = Number(item.pessoas) || 0;
+  eletronicos = Number(item.eletronicos) || 0;
+  portas = Number(item.portas) || 0;
+  janelas = Number(item.janelas) || 0;
+  paredes = Number(item.paredes) || 0;
+
+  tipoJanela = item.tipoJanela || "";
+  sol = item.sol || "";
+  forro = item.forro || "";
+  tipoPorta = item.tipoPorta || "";
+  frequenciaPorta = item.frequenciaPorta || "";
+
+  distribuicaoSelecionada =
+    item.tipoDistribuicao || "";
+
+  sistemaProjeto = {
+    sistema: item.sistema || "",
+    categoria: item.categoria || "",
+    observacao: item.observacao || ""
+  };
+
+  document.getElementById("nomeAmbiente").value = item.nome;
+  document.getElementById("largura").value = largura;
+  document.getElementById("comprimento").value = comprimento;
+  document.getElementById("pessoas").value = pessoas;
+  document.getElementById("eletronicos").value = eletronicos;
+  document.getElementById("portas").value = portas;
+  document.getElementById("frequenciaPorta").value = frequenciaPorta;
+  document.getElementById("tipoPorta").value = tipoPorta;
+  document.getElementById("janelas").value = janelas;
+  document.getElementById("paredes").value = paredes;
+
+  document.getElementById("janela").value = tipoJanela;
+  document.getElementById("sol").value = sol;
+  document.getElementById("forro").value = forro;
+
+  travarFormulario(true);
+
+  calcularMemorial();
+
+  let btuTotal = item.btu;
+
+  document.getElementById("resultado").innerHTML =
+    `📍 <strong>${item.nome}</strong><br>
+     🔥 <strong>${btuTotal.toLocaleString("pt-BR")} BTUS</strong>`;
+
+  renderResultado(btuTotal, pessoas);
+
+  rec = recomendacaoFinal(btuTotal);
+
+  montarPDF();
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+function travarFormulario(travar) {
+  let campos = document.querySelectorAll(
+    "#nomeAmbiente, #largura, #comprimento, #pessoas, #eletronicos, #portas, #janelas, #paredes, #janela, #sol, #forro, #tipoPorta, #frequenciaPorta"
+  );
+
+  campos.forEach(campo => {
+    campo.disabled = travar;
+
+    if (travar) {
+      campo.style.background = "#eff6ff"; // azul claro
+      campo.style.borderColor = "#2563eb";
+      campo.style.color = "#1e3a8a";
+      campo.style.cursor = "not-allowed";
+    } else {
+      campo.style.background = "";
+      campo.style.borderColor = "";
+      campo.style.color = "";
+      campo.style.cursor = "";
+    }
+  });
+}
+
+let modoVisualizacao = false;
+
+function acaoBotao(){
+  if (modoVisualizacao){
+     voltarParaCalculo();
+  }
+
+  else {
+
+    if(!calcularBTU()) return;
+
+      salvarProjeto();
+      carregarHistorico();
+      criarPDF();
+      resetarTela();
+  }
+}
+
+function limparFormulario(){
+  document.querySelectorAll("input").forEach(i => i.value = "");
+  document.querySelectorAll("select").forEach(s => s.value = "");
+}
+
+function voltarParaCalculo(){
+    indexEditando = null;
+    modoVisualizacao = false;
+    document.querySelectorAll("input").forEach(i => i.value = "");
+    document.querySelectorAll("select").forEach(s => s.value = "");
+
+    document.getElementById("resultado").innerHTML = "";
+    document.getElementById("recomendacao").innerHTML = "";
+    document.getElementById("distribuicao").innerHTML = "";
+
+    document.getElementById("pdfResultado").innerHTML = "";
+    document.getElementById("pdfDistribuicao").innerHTML = "";
+    travarFormulario(false);
+    let btn =  document.getElementById("btnCalcular");
+    btn.innerText = "Calcular"
+}
+
+function editarItem(index) {
+  let historico = JSON.parse(localStorage.getItem("historicoBTU")) || [];
+  let item = historico[index];
+  let btn = document.getElementById("btnCalcular");
+  btn.innerText = "Atualizar";
+
+  document.getElementById("nomeAmbiente").value = item.nome;
+  document.getElementById("largura").value = item.largura;
+  document.getElementById("comprimento").value = item.comprimento;
+  document.getElementById("pessoas").value = item.pessoas;
+  document.getElementById("eletronicos").value = item.eletronicos;
+  document.getElementById("portas").value = item.portas;
+  document.getElementById("janelas").value = item.janelas;
+  document.getElementById("paredes").value = item.paredes;
+
+  document.getElementById("janela").value = item.tipoJanela;
+  document.getElementById("sol").value = item.sol;
+  document.getElementById("forro").value = item.forro;
+
+  indexEditando = index;
+
+  // 🔓 destravar edição
+  travarFormulario(false);
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function carregarHistorico() {
+  let historico = JSON.parse(localStorage.getItem("historicoBTU")) || [];
+  let html = "<h3>Históricos Recentes</h3>";
+
+  historico
+    .map((item, index) => ({ item, index })) // preserva índice original
+    .reverse() // mais recente primeiro
+    .forEach(({ item, index }) => {
+
+      if (!item || !item.nome) return;
+
+      html += `
+        <div style="background:#fff; padding:12px; margin-top:10px; border-radius:10px; display:flex; justify-content:space-between; gap:10px; align-items:center;">
+          
+          <div style="flex:1;">
+            <strong>${item.nome}</strong><br>
+            <strong>${item.btu.toLocaleString("pt-BR")} BTUS</strong><br>
+            <small>${item.data}</small><br>
+
+            ${
+              item.distribuicao ? `
+              <div style="color:#2563eb; margin-top:6px;">
+                🔧 Projeto com distribuição
+              </div>
+              ` : `
+              <div style="color:#2563eb; margin-top:6px;">
+                🔧 Projeto simples (sem necessidade de distribuição)
+              </div>
+              `
+            }
+
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <button onclick="verItem(${index})"
+              style="background:#2563eb;color:white;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:12px;">
+              Ver
+            </button>
+
+            <button onclick="editarItem(${index})"
+              style="background:#f59e0b;color:white;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:12px;">
+              Editar
+            </button>
+
+            <button onclick="excluirItem(${index})"
+              style="background:red;color:white;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:12px;">
+              Excluir
+            </button>
+          </div>
+
+        </div>
+      `;
+    });
+
+  document.getElementById("historico").innerHTML = html;
+}
+
+function excluirItem(index) {
+  let historico = JSON.parse(localStorage.getItem("historicoBTU")) || [];
+  historico.splice(index, 1);
+  localStorage.setItem("historicoBTU", JSON.stringify(historico));
+  carregarHistorico();
+}
+
+// função de alerta 
+window.addEventListener("load", function () {
+  carregarHistorico();
+
+  let inputLargura = document.getElementById("largura");
+  let inputComprimento = document.getElementById("comprimento");
+  let inputParedes = document.getElementById("sol");
+  let inputJanela = document.getElementById("janela");
+
+  inputLargura.addEventListener("input", function () {
+    this.classList.remove("erro");
+  });
+
+  inputComprimento.addEventListener("input", function () {
+    this.classList.remove("erro");
+  });
+
+  inputParedes.addEventListener("change", function () {
+    this.classList.remove("erro");
+  });
+
+  inputJanela.addEventListener("change", function () {
+    if (this.value !== "") {
+      this.classList.remove("erro");
+    }
+  });
+
+  inputParedes.addEventListener("input", function(){
+    this.classList.remove("erro");
+  })
+
+  inputJanela.addEventListener("input", function(){
+    this.classList.remove("erro");
+  });
+
+});
+
+
+const modalOverlay =
+  document.getElementById("modalOverlay");
+
+const btnConfirmarPDF =
+  document.getElementById("btnConfirmarPDF");
+
+const fecharModal =
+  document.getElementById("fecharModal");
+
+
+
+// ABRIR MODAL
+function abrirModalPDF() {
+  
+  montarPDF();
+
+  atualizarCampoDistribuicao();
+  modalOverlay.classList.add("active");
+
+}
+
+function atualizarCampoDistribuicao() {
+
+  const campo =
+  document.getElementById("campoDistribuicao");
+
+  if (rec.tipo === "distribuicao") {
+
+      campo.style.display = "block";
+
+  } else {
+
+      campo.style.display = "none";
+
+  }
+
+}
+
+function mostrarAviso(mensagem) {
+
+  document.getElementById("mensagemAviso").textContent = mensagem;
+
+  const overlay =
+      document.getElementById("modalAviso");
+
+  const modal =
+      overlay.querySelector(".modal-aviso");
+
+  overlay.classList.add("active");
+
+  setTimeout(() => {
+      modal.classList.add("show");
+  }, 10);
+
+}
+
+function fecharAviso() {
+
+  const overlay = document.getElementById("modalAviso");
+  const modal = document.querySelector(".modal-aviso");
+
+  modal.classList.add("saindo");
+
+  setTimeout(() => {
+
+    overlay.classList.remove("active");
+    modal.classList.remove("saindo");
+
+  }, 300);
+
+}
+
+document
+  .getElementById("btnFecharAviso")
+  .addEventListener("click", fecharAviso);
+
+function validarDistribuicao() {
+
+  distribuicaoSelecionada =
+  document.getElementById("tipoDistribuicao").value;
+
+
+  // VALIDAR
+  if (
+      resultadoFinal > 24000 &&
+      distribuicaoSelecionada === ""
+  ) {
+
+    mostrarAviso("Escolha uma distribuição.");
+      return false;
+
+  }
+
+  // 🌬️ ABERTO
+  if (distribuicaoSelecionada === "aberto") {
+
+    resultadoDistribuicao = rec.aberto;
+
+  }
+
+  // 🏢 MÉDIO
+  else if (distribuicaoSelecionada === "medio") {
+
+    resultadoDistribuicao = rec.divisoes;
+
+  }
+
+  // 🧱 DIFÍCIL
+  else if (distribuicaoSelecionada === "dificil") {
+
+    resultadoDistribuicao = rec.fluxo;
+
+  }
+
+
+  return resultadoDistribuicao;
+
+}
+
+const btnGerarPDF = document.getElementById("btnConfirmarPDF");
+
+btnConfirmarPDF.addEventListener("click", () => {
+
+  nomeCliente =
+  document.getElementById("nomeCliente").value.trim();
+
+  if (rec.tipo === "distribuicao") {
+
+      let distribuicaoFinal =
+      validarDistribuicao();
+
+      if (!distribuicaoFinal) {
+          return;
+      }
+
+  }
+
+  gerarPDF();
+  fecharModalPDF();
+
+});
+
+
+
+// FECHAR MODAL
+function fecharModalPDF() {
+
+  modalOverlay.classList.remove("active");
+
+}
+
+
+fecharModal.addEventListener(
+  "click",
+  fecharModalPDF
+);
+
+
+// FECHAR AO CLICAR FORA
+modalOverlay.addEventListener("click", (e) => {
+
+  if(e.target === modalOverlay) {
+
+    fecharModalPDF();
+
+  }
+
+});
+
+nomeCliente = document.getElementById("nomeCliente");
+const contadorNome = document.getElementById("contadorNome");
+nomeCliente.addEventListener("input", function(){
+
+this.value = this.value.replace(/^\s+/, "");
+
+this.value = this.value.replace(/\s{2,}/g, " ");
+
+const tamanho = this.value.length;
+  
+  contadorNome.textContent = `Contador de Letras: ${tamanho}/40`;
+
+if (tamanho <= 25){
+  contadorNome.style.color = "#000";}
+
+else if (tamanho <= 39){
+    contadorNome.style.color = "#f39c12";}
+  
+else {
+  contadorNome.style.color = "#e74c3c";}
+});
+
+window.verItem = verItem;
+window.editarItem = editarItem;
+window.excluirItem = excluirItem;

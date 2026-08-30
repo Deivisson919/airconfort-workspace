@@ -1,0 +1,144 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-image: url(img/fundoicone.jpeg);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 10px;
+    margin: 0;
+}
+
+.recovery-container {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    padding: 20px;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card {
+    background: #ffffff;
+    padding: 1.2rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 460px;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.logo-img {
+    width: 100px;
+    height: auto;
+    margin-bottom: 2px;
+}
+
+h1 {
+    color: #0056b3;
+    font-size: 1.15rem;
+    margin-bottom: 0;
+    letter-spacing: 0.5px;
+}
+
+.black-text {
+    color: #222222;
+}
+
+.subtitle {
+    font-size: 0.65rem;
+    margin-bottom: 16px;
+    color: #777;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+h2 {
+    font-size: 0.95rem;
+    margin-bottom: 18px;
+    color: #0056b3;
+    font-weight: 600;
+}
+
+input {
+    width: 100%;
+    padding: 9px 12px;
+    margin: 8px 0;
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    background-color: #fafafa;
+}
+
+input:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: #fff;
+}
+
+/* Container para alinhar o input de senha e o ícone do olho */
+.password-container {
+    position: relative;
+    width: 100%;
+    margin: 4px 0;
+}
+
+.password-container input {
+    margin: 0;
+    padding-right: 35px;
+}
+
+/* Estilo do ícone do olho */
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+    font-size: 0.85rem;
+}
+
+.toggle-password:hover {
+    color: #007bff;
+}
+
+.register-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-top: 18px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.register-btn:hover {
+    background-color: #0056b3;
+}

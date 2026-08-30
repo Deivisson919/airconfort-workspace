@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar - Air Confort</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="Login/style.css">
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="card">
+            <div class="logo-container">
+                <img src="Login/img/logo-evaporadora.jpeg" alt="Logo Air Confort" class="logo-img">
+                <h1><span class="black-text">AIR</span> CONFORT</h1>
+            </div>
+
+            <p class="subtitle">SOLUÇÕES EM CLIMATIZAÇÃO</p>
+
+            <h2>Entrar</h2>
+
+            <form>
+                <!-- Campos de E-mail e Senha no topo -->
+                <input type="email" placeholder="E-mail" id="login" required>
+
+                <!-- Campo Senha com ícone de olho -->
+                <div class="password-container">
+                    <input type="password" id="senha" placeholder="Senha" required>
+                    <i class="fa-regular fa-eye toggle-password" id="toggleSenhaLogin"></i>
+                </div>
+
+                <!-- Botão principal de entrar -->
+                <button type="submit" class="register-btn" onclick="logar(); return false">Entrar</button>
+
+                <div class="divider">
+                    <h1>Ou</h1>
+                </div>
+
+                <!-- Botão do Google -->
+                <button type="button" class="google-btn">
+                    <img src="Login/img/logo-google.png" alt="Google" class="google-icon">
+                    Entrar com o Google
+                </button>
+            </form>
+
+            <!-- Novas opções logo abaixo -->
+            <div class="bottom-options">
+                <a href="registrar.html" class="nav-link">Registrar-se</a>
+                <a href="esqueciSenha.html" class="nav-link nav-link-secondary">Esqueci a minha senha</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script para o funcionamento do olho da senha -->
+    <script>
+
+        function logar() {
+
+            var login = document.getElementById("login").value
+            var senha = document.getElementById("senha").value
+
+            if (login == "teste" && senha == "teste") {
+                location.href = "calculadora.html"
+            }
+            else {
+                alert('senha ou usuario incorreto')
+            }
+
+        }
+
+        const inputSenha = document.getElementById('senha');
+        const iconeSenha = document.getElementById('toggleSenhaLogin');
+
+        iconeSenha.addEventListener('click', function () {
+            if (inputSenha.type === 'password') {
+                inputSenha.type = 'text';
+                iconeSenha.classList.remove('fa-eye');
+                iconeSenha.classList.add('fa-eye-slash');
+            } else {
+                inputSenha.type = 'password';
+                iconeSenha.classList.remove('fa-eye-slash');
+                iconeSenha.classList.add('fa-eye');
+            }
+        });
+    </script>
+</body>
+
+</html>

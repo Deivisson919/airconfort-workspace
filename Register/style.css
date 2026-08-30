@@ -1,0 +1,170 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-image: url(img/fundoicone.jpeg);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 10px;
+    margin: 0;
+}
+
+.registrar-container {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    padding: 20px;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card {
+    background: #ffffff;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    text-align: center;
+    margin-bottom: 1rem;
+    height: auto; /* Ajustado para acomodar perfeitamente o novo espaçamento distribuído */
+    min-height: 480px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.logo-img {
+    width: 110px;
+    height: auto;
+    margin-bottom: 2px;
+}
+
+h1 {
+    color: #007bff;
+    font-size: 1.1rem;
+    margin-bottom: 0;
+}
+
+.black-text {
+    color: #000000;
+}
+
+.subtitle {
+    font-size: 0.7rem;
+    margin-bottom: 12px;
+    color: #777;
+}
+
+h2 {
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+    color: #007bff;
+}
+
+input {
+    width: 100%;
+    padding: 7px;
+    margin: 6px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+/* Container para alinhar o input de senha e o ícone do olho */
+.password-container {
+    position: relative;
+    width: 100%;
+    margin: 6px 0;
+}
+
+.password-container input {
+    margin: 0;
+    padding-right: 30px;
+    /* Espaço para o ícone não cobrir o texto */
+}
+
+/* Estilo do ícone do olho */
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+    font-size: 0.8rem;
+}
+
+.toggle-password:hover {
+    color: #007bff;
+}
+
+.google-btn {
+    width: 100%;
+    padding: 8px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.google-icon {
+    width: 15px;
+    height: 15px;
+    display: block;
+}
+
+.divider {
+    margin: 8px 0;
+    color: #999;
+    font-size: 0.75rem;
+}
+
+.register-btn {
+    width: 100%;
+    padding: 8px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-top: 8px;
+    cursor: pointer;
+}
+
+.nav-link {
+    display: block;
+    font-size: 0.8rem;
+    color: #007bff;
+    text-decoration: none;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+}

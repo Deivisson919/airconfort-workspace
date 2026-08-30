@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Senha - Air Confort</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="Esqueciasenha/style.css">
+</head>
+
+<body>
+    <div class="recovery-container">
+        <div class="card">
+            <div class="logo-container">
+                <img src="Esqueciasenha/img/Logoevaporadora.jpeg" alt="Logo Air Confort" class="logo-img">
+                <h1><span class="black-text">AIR</span> CONFORT</h1>
+            </div>
+
+            <p class="subtitle">SOLUÇÕES EM CLIMATIZAÇÃO</p>
+
+            <h2>Recuperar Senha</h2>
+
+            <form>
+                <div class="password-container">
+                    <input type="password" id="nova-senha" placeholder="Nova senha" required>
+                    <i class="fa-regular fa-eye toggle-password" id="toggleNovaSenha"></i>
+                </div>
+
+                <div class="password-container">
+                    <input type="password" id="confirmar-senha" placeholder="Confirmar senha" required>
+                    <i class="fa-regular fa-eye toggle-password" id="toggleConfirmarSenha"></i>
+                </div>
+
+                <button type="submit" class="register-btn">Alterar senha</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script para alternar a visibilidade das senhas -->
+    <script>
+        function configurarOlhoSenha(idInput, idIcone) {
+            const input = document.getElementById(idInput);
+            const icone = document.getElementById(idIcone);
+
+            icone.addEventListener('click', function () {
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icone.classList.remove('fa-eye');
+                    icone.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icone.classList.remove('fa-eye-slash');
+                    icone.classList.add('fa-eye');
+                }
+            });
+        }
+
+        configurarOlhoSenha('nova-senha', 'toggleNovaSenha');
+        configurarOlhoSenha('confirmar-senha', 'toggleConfirmarSenha');
+    </script>
+</body>
+
+</html>
