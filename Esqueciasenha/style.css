@@ -32,28 +32,28 @@ body {
 
 .card {
     background: #ffffff;
-    padding: 1.2rem;
+    padding: 2rem 1.8rem;
     border-radius: 16px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     width: 100%;
     text-align: center;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    min-height: 460px;
+    /* Substituído o space-between por gap para os itens fluírem naturalmente sem buracos */
+    gap: 12px;
 }
 
 .logo-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 4px;
+    margin-bottom: 0;
 }
 
 .logo-img {
-    width: 100px;
+    width: 90px;
     height: auto;
-    margin-bottom: 2px;
+    margin-bottom: 6px;
 }
 
 h1 {
@@ -69,7 +69,7 @@ h1 {
 
 .subtitle {
     font-size: 0.65rem;
-    margin-bottom: 16px;
+    margin-bottom: 4px;
     color: #777;
     letter-spacing: 1px;
     font-weight: 600;
@@ -77,15 +77,21 @@ h1 {
 
 h2 {
     font-size: 0.95rem;
-    margin-bottom: 18px;
+    margin-bottom: 4px;
     color: #0056b3;
     font-weight: 600;
 }
 
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
 input {
     width: 100%;
-    padding: 9px 12px;
-    margin: 8px 0;
+    padding: 11px 12px;
     border: 1px solid #dcdcdc;
     border-radius: 6px;
     font-size: 0.85rem;
@@ -102,7 +108,6 @@ input:focus {
 .password-container {
     position: relative;
     width: 100%;
-    margin: 4px 0;
 }
 
 .password-container input {
@@ -127,14 +132,14 @@ input:focus {
 
 .register-btn {
     width: 100%;
-    padding: 10px;
+    padding: 11px;
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 6px;
     font-weight: bold;
     font-size: 0.9rem;
-    margin-top: 18px;
+    margin-top: 6px;
     cursor: pointer;
     transition: background-color 0.2s;
 }

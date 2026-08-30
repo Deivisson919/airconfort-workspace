@@ -151,10 +151,12 @@ input {
 }
 
 .bottom-options {
-    margin-top: 12px; /* Espaço um pouco maior em relação ao botão do Google */
+    margin-top: 12px;
+    /* Espaço um pouco maior em relação ao botão do Google */
     display: flex;
     flex-direction: column;
-    gap: 16px; /* Distância maior entre "Registrar-se" e "Esqueci a minha senha" */
+    gap: 16px;
+    /* Distância maior entre "Registrar-se" e "Esqueci a minha senha" */
 }
 
 .nav-link {
@@ -166,12 +168,11 @@ input {
 }
 
 .nav-link-secondary {
-    color: #555;
+    color: #007bff;
     /* Um tom mais discreto para o esqueci a senha, se preferir */
     font-weight: normal;
 }
 
 .nav-link:hover {
     text-decoration: underline;
-}ext-decoration: underline;
-
+}
