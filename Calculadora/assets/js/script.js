@@ -100,237 +100,237 @@ function parseNumero(valor) {
   return parseFloat(valor);
 }
 
+
 function calcularBTU() {
 
   let nomeInput = document.getElementById("nomeAmbiente");
-   nomeAmbiente = nomeInput ? nomeInput.value.trim() : "";
-  if (!nomeAmbiente) nomeAmbiente = "Ambiente";
 
-   largura = parseNumero(document.getElementById("largura").value);
-   comprimento = parseNumero(document.getElementById("comprimento").value);
+  nomeAmbiente = nomeInput ? nomeInput.value.trim() : "";
+
+  if (!nomeAmbiente) {
+    nomeAmbiente = "Ambiente";
+  }
+
+
+  largura = parseNumero(document.getElementById("largura").value);
+  comprimento = parseNumero(document.getElementById("comprimento").value);
 
   area = largura * comprimento;
 
-   pessoas = parseInt(document.getElementById("pessoas").value) || 0;
-   eletronicos = parseInt(document.getElementById("eletronicos").value) || 0;
-   portas = parseInt(document.getElementById("portas").value) || 0;
-   janelas = parseInt(document.getElementById("janelas").value) || 0;
-
+  pessoas = parseInt(document.getElementById("pessoas").value) || 0;
+  eletronicos = parseInt(document.getElementById("eletronicos").value) || 0;
+  portas = parseInt(document.getElementById("portas").value) || 0;
+  janelas = parseInt(document.getElementById("janelas").value) || 0;
   paredes = parseInt(document.getElementById("paredes").value) || 0;
 
-   tipoJanela = document.getElementById("janela").value;
-   sol = document.getElementById("sol").value;
-   forro = document.getElementById("forro").value;
-   tipoPorta = document.getElementById("tipoPorta").value;
-   frequenciaPorta = document.getElementById("frequenciaPorta").value;
+  tipoJanela = document.getElementById("janela").value;
+  sol = document.getElementById("sol").value;
+  forro = document.getElementById("forro").value;
 
-  // 🔴 VALIDAÇÕES
-  let inputLargura = document.getElementById("largura");
-  let inputComprimento = document.getElementById("comprimento");
-  let inputSol = document.getElementById("sol");
-  let inputJanela = document.getElementById("janela");
-  let  inputParedes = document.getElementById("paredes");
-  let inputJanelas = document.getElementById("janelas");
-
-
-  if (!largura || largura <= 0) {
-    inputLargura.classList.add("erro");
-    return false;
-  } else {
-    inputLargura.classList.remove("erro");
-  }
-
-  if (!comprimento || comprimento <= 0) {
-    inputComprimento.classList.add("erro");
-    return false;
-  } else {
-    inputComprimento.classList.remove("erro");
-  }
-
-  if (paredes > 0 && sol === "") {
-    inputSol.classList.add("erro");
-    return false;
-  } else {
-    inputSol.classList.remove("erro");
-  }
-  
-  if(sol !== "" && paredes <= 0){
-      inputParedes.classList.add("erro");
-      return false;
-  } else{
-    inputParedes.classList.remove("erro")
-  }
-
-  if (janelas > 0 && tipoJanela === "") {
-    inputJanela.classList.add("erro");
-    return false;
-  } else {
-    inputJanela.classList.remove("erro");
-  }
-
-  if(tipoJanela !== "" && janelas<= 0) {
-      inputJanelas.classList.add("erro");
-      return false; 
-  } else{
-      inputJanelas.classList.remove("erro");
-  }
+  tipoPorta = document.getElementById("tipoPorta").value;
+  frequenciaPorta = document.getElementById("frequenciaPorta").value;
 
   let pessoasExtra = pessoas > 1 ? pessoas - 1 : 0;
 
-  // 🔹 DETALHAMENTO PDF
+  detalhePortas = 0;
+  detalheFrequencia = 0;
 
-   btuTotal =
+  btuPorta = 0;
+  fatorFrequencia = 1;
+
+  textoPorta = "Portas";
+  textoFrequencia = "";
+
+
+  if (portas > 0 && tipoPorta && frequenciaPorta) {
+
+    if (tipoPorta === "comum") {
+
+      textoPorta = "Porta comum";
+      btuPorta = 400;
+
+    }
+
+    if (tipoPorta === "vidro") {
+
+      textoPorta = "Porta de vidro";
+      btuPorta = 800;
+
+    }
+
+    if (tipoPorta === "vitrine") {
+
+      textoPorta = "Porta vitrine";
+      btuPorta = 800;
+
+    }
+
+    if (tipoPorta === "automatica") {
+
+      textoPorta = "Porta automática de vidro";
+      btuPorta = 1500;
+
+    }
+
+    detalhePortas = portas * btuPorta;
+
+    if (frequenciaPorta === "baixa") {
+
+      fatorFrequencia = 1;
+      textoFrequencia = "Baixa: 0% de acréscimo";
+
+    }
+
+    if (frequenciaPorta === "media") {
+
+      fatorFrequencia = 1.25;
+      textoFrequencia = "Média: 25% de acréscimo";
+
+    }
+
+    if (frequenciaPorta === "alta") {
+
+      fatorFrequencia = 1.5;
+      textoFrequencia = "Alta: 50% de acréscimo";
+
+    }
+
+    detalheFrequencia =
+      detalhePortas * (fatorFrequencia - 1);
+
+  }
+
+  btuTotal =
     (area * 600) +
     (pessoasExtra * 600) +
     (eletronicos * 600) +
     detalhePortas +
     detalheFrequencia;
-    
-  btuPorta = 0; 
-  fatorFrequencia = 1;
-  textoPorta = "Portas";
-  textoFrequencia = ""
-if (portas > 0 && tipoPorta && frequenciaPorta) {
 
-
-  if (tipoPorta === "comum") {
-    textoPorta = "Porta comum";
-      btuPorta	= 400;
-  }
-
-  if (tipoPorta === "vidro"){
-    textoPorta = "Porta de vidro";
-    btuPorta = 800;
-  }
-  
-  if (tipoPorta === "vitrine"){
-    textoPorta = "Porta vitrine";
-    btuPorta = 800;
-  }
-
-  if (tipoPorta === "automatica"){
-    textoPorta = "Porta automática de vidro";
-    btuPorta = 1500;
-  }
-
-    detalhePortas = portas * btuPorta
-
-
-  // frequencia abertura
-  if (frequenciaPorta === "baixa"){
-      fatorFrequencia = 1;
-      textoFrequencia = "Baixa: 0% de acréscimo";
-  }
-
-  if (frequenciaPorta === "media"){
-      fatorFrequencia = 1.25;
-      textoFrequencia = "Média: 25% de acréscimo";
-  }
-
-  if (frequenciaPorta === "alta") {
-    fatorFrequencia = 1.5;
-    textoFrequencia = "Alta: 50% de acréscimo";
-  }
-
-  detalheFrequencia = detalhePortas * (fatorFrequencia);
-
-
-}
-
-
-  // 🔹 JANELAS
   detalheJanelas = 0;
   qtdJanelas = 0;
-  calculoJanela  = "Sem janela";
+  calculoJanela = "Sem janela";
 
   if (tipoJanela && janelas > 0) {
 
     qtdJanelas = janelas;
-    let textoJanela = ""
+
+    let textoJanela = "";
 
     if (tipoJanela === "1") {
-      textoJanela = qtdJanelas === 1 ? "pequena x 400 BTU/Unidade" : "pequenas x 400 BTU/Unidade";
+
+      textoJanela =
+        qtdJanelas === 1
+          ? "pequena x 400 BTU/Unidade"
+          : "pequenas x 400 BTU/Unidade";
+
       detalheJanelas = janelas * 400;
+
     }
 
     if (tipoJanela === "2") {
-      textoJanela = qtdJanelas === 1 ? "média x 800 BTU/Unidade" : "médias x 800 BTU/Unidade";
+
+      textoJanela =
+        qtdJanelas === 1
+          ? "média x 800 BTU/Unidade"
+          : "médias x 800 BTU/Unidade";
+
       detalheJanelas = janelas * 800;
+
     }
 
     if (tipoJanela === "3") {
-      textoJanela = qtdJanelas === 1 ? "grande x 1200 BTU/Unidade" : "grandes x 1200 BTU/Unidade";
+
+      textoJanela =
+        qtdJanelas === 1
+          ? "grande x 1200 BTU/Unidade"
+          : "grandes x 1200 BTU/Unidade";
+
       detalheJanelas = janelas * 1200;
+
     }
+
     btuTotal += detalheJanelas;
-    calculoJanela = `${qtdJanelas} ${textoJanela}`;
+
+    calculoJanela =
+      `${qtdJanelas} ${textoJanela}`;
+
   }
 
-  // 🔹 PAREDES
   detalheParedes = paredes * 800;
+
   btuTotal += detalheParedes;
 
-  // 🔹 SOL
   detalheSol = 0;
-  calculoSol = "Sem insolação"
+  calculoSol = "Sem insolação";
 
   if (paredes > 0 && sol) {
 
-    if (sol === "1") { 
-        calculoSol = `Sol o dia todo + 10%`
-        detalheSol = btuTotal * 0.10;
-        btuTotal += detalheSol;
+    if (sol === "1") {
+
+      calculoSol = "Sol o dia todo + 10%";
+
+      detalheSol = btuTotal * 0.10;
+
+      btuTotal += detalheSol;
+
     }
 
     if (sol === "2") {
-        calculoSol = `Meio período + 5%`
-        detalheSol = btuTotal * 0.05;
-        btuTotal += detalheSol;
+
+      calculoSol = "Meio período + 5%";
+
+      detalheSol = btuTotal * 0.05;
+
+      btuTotal += detalheSol;
+
     }
 
   }
 
-  // 🔹 FORRO
   detalheForro = 0;
-  calculoForro = "Forrado"
+  calculoForro = "Forrado";
+
   if (forro === "1") {
-    calculoForro = " Sem forro + 800 BTUs";
+
+    calculoForro = "Sem forro + 800 BTUs";
+
     detalheForro = 800;
+
     btuTotal += detalheForro;
+
   }
 
   btuTotal = Math.ceil(btuTotal);
 
-  // 📊 RESULTADO
   document.getElementById("resultado").innerHTML =
     `📍 <strong>${nomeAmbiente}</strong><br>
      🔥 <strong>${btuTotal.toLocaleString("pt-BR")} BTUs</strong>`;
 
-  // 🧠 RENDER
   resultadoFinal = btuTotal;
 
   renderResultado(btuTotal, pessoas);
 
-  // 💾 SALVAR
   rec = recomendacaoFinal(btuTotal);
+
   dataProjeto = new Date().toLocaleDateString("pt-BR");
+
 
   return true;
 }
 
+
 function calcularMemorial() {
 
-  
   let pessoasExtra = pessoas > 1 ? pessoas - 1 : 0;
 
-  
   let btuMemorial =
     (area * 600) +
     (pessoasExtra * 600) +
     (eletronicos * 600) +
-    detalhePortas + detalheFrequencia;
+    detalhePortas +
+    detalheFrequencia;
 
-  // DETALHES
   detalheArea = area * 600;
   detalhePessoas = pessoasExtra * 600;
   detalheEletronicos = eletronicos * 600;
@@ -350,42 +350,45 @@ function calcularMemorial() {
     let textoJanela = "";
 
     if (tipoJanela === "1") {
-      textoJanela = janelas === 1
-        ? "pequena x 400 BTU/Unidade"
-        : "pequenas x 400 BTU/Unidade";
+
+      textoJanela =
+        qtdJanelas === 1
+          ? "pequena x 400 BTU/Unidade"
+          : "pequenas x 400 BTU/Unidade";
 
       detalheJanelas = janelas * 400;
     }
 
     if (tipoJanela === "2") {
-      textoJanela = janelas === 1
-        ? "média x 800 BTU/Unidade"
-        : "médias x 800 BTU/Unidade";
+
+      textoJanela =
+        qtdJanelas === 1
+          ? "média x 800 BTU/Unidade"
+          : "médias x 800 BTU/Unidade";
 
       detalheJanelas = janelas * 800;
     }
 
     if (tipoJanela === "3") {
-      textoJanela = janelas === 1
-        ? "grande x 1200 BTU/Unidade"
-        : "grandes x 1200 BTU/Unidade";
+
+      textoJanela =
+        qtdJanelas === 1
+          ? "grande x 1200 BTU/Unidade"
+          : "grandes x 1200 BTU/Unidade";
 
       detalheJanelas = janelas * 1200;
     }
 
     btuMemorial += detalheJanelas;
 
-    calculoJanela = `${qtdJanelas} ${textoJanela}`;
+    calculoJanela =
+      `${qtdJanelas} ${textoJanela}`;
   }
 
-
-  // PAREDES
   detalheParedes = paredes * 800;
 
   btuMemorial += detalheParedes;
 
-
-  // INSOLAÇÃO
   detalheSol = 0;
   calculoSol = "Sem insolação";
 
@@ -410,8 +413,6 @@ function calcularMemorial() {
     }
   }
 
-
-  // FORRO
   detalheForro = 0;
   calculoForro = "Forrado";
 
@@ -424,60 +425,10 @@ function calcularMemorial() {
     btuMemorial += detalheForro;
   }
 
-  btuPorta = 0; 
-  fatorFrequencia = 1;
-  textoPorta = "Sem porta";
-  textoFrequencia = "";
-if (portas > 0 && tipoPorta && frequenciaPorta) {
-
-
-  if (tipoPorta === "comum") {
-    textoPorta = "Porta comum";
-      btuPorta	= 400;
-  }
-
-  if (tipoPorta === "vidro"){
-    textoPorta = "Porta de vidro";
-    btuPorta = 800;
-  }
-  
-  if (tipoPorta === "vitrine"){
-    textoPorta = "Porta vitrine";
-    btuPorta = 800;
-  }
-
-  if (tipoPorta === "automatica"){
-    textoPorta = "Porta automática de vidro";
-    btuPorta = 1500;
-  }
-
-      detalhePortas = portas * btuPorta
-
-
-  if (frequenciaPorta === "baixa"){
-      fatorFrequencia = 1;
-      textoFrequencia = "Baixa: 0% de acréscimo";
-  }
-
-  if (frequenciaPorta === "media"){
-      fatorFrequencia = 1.25;
-      textoFrequencia = "Média: 25% de acréscimo";
-  }
-
-  if (frequenciaPorta === "alta") {
-    fatorFrequencia = 1.5;
-    textoFrequencia = "Alta: 50% de acréscimo";
-  }
-
-  detalheFrequencia = detalhePortas * (fatorFrequencia);
-
-
-}
-
-
 
   return Math.ceil(btuMemorial);
 }
+
 
 function salvarProjeto() {
   salvarCalculo({
@@ -1060,6 +1011,7 @@ let modoVisualizacao = false;
 function acaoBotao(){
   if (modoVisualizacao){
      voltarParaCalculo();
+     return;
   }
 
   else {
