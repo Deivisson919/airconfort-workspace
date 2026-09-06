@@ -115,11 +115,8 @@ await esperarRenderizacao();
     }
   };
 
-console.log(elemento);
-console.log(elemento.innerHTML);
-console.log(elemento.offsetHeight);
 
-html2pdf()
+await html2pdf()
 .set(opt)
 .from(elemento)
 .save();
@@ -292,49 +289,57 @@ function montarPDF() {
 
         <tr>
           <td><img src="Calculadora/assets/Images/area.png" alt="Area"></td>
-          <td>ÁREA</td>
+          <td>Área</td>
           <td>${area.toLocaleString("pt-BR")} m² x 600 BTU/m²</td>
           <td>${detalheArea.toLocaleString("pt-BR")}</td>
         </tr>
 
         <tr>
           <td><img src="Calculadora/assets/Images/people.png" alt="Pessoas"></td>
-          <td>PESSOAS</td>
+          <td>Pessoas</td>
           <td>${qtdPessoas} x 600 BTU/pessoa</td>
           <td>${detalhePessoas.toLocaleString("pt-BR")}</td>
         </tr>
 
         <tr>
           <td><img src="Calculadora/assets/Images/tv.png" alt="Eletrônicos"></td>
-          <td>ELETRÔNICOS</td>
+          <td>Eletrônicos</td>
           <td>${qtdEletronicos} x 600 BTU/aparelho</td>
           <td>${detalheEletronicos.toLocaleString("pt-BR")}</td>
         </tr>
 
         <tr>
           <td><img src="Calculadora/assets/Images/door.png" alt="Portas"></td>
-          <td>PORTAS EXTERNAS</td>
-          <td>${qtdPortas} x 400 BTU/unidade</td>
+          <td>${textoPorta}</td>
+          <td>${qtdPortas} x ${btuPorta} BTU/unidade</td>
           <td>${detalhePortas.toLocaleString("pt-BR")}</td>
         </tr>
 
         <tr>
+        <td><img src="Calculadora/assets/Images/opendoor.png" alt="Portas"></td>
+        <td>Frequência abertura de portas</td>
+        <td>${textoFrequencia}</td>
+        <td>${detalheFrequencia.toLocaleString("pt-br")}</td>
+      </tr>
+
+
+        <tr>
           <td><img src="Calculadora/assets/Images/window.png" alt="Janelas"></td>
-          <td>JANELAS</td>
+          <td>Janelas</td>
           <td>${calculoJanela}</td>
           <td>${detalheJanelas.toLocaleString("pt-BR")}</td>
         </tr>
 
         <tr>
           <td><img src="Calculadora/assets/Images/sun.png" alt="Insolação"></td>
-          <td>INSOLAÇÃO</td>
+          <td>Insolação</td>
           <td>${calculoSol}</td>
           <td>${detalheSol.toLocaleString("pt-BR")}</td>
         </tr>
 
         <tr>
           <td><img src="Calculadora/assets/Images/house.png" alt="Forro"></td>
-          <td>FORRO</td>
+          <td>Forro</td>
           <td>${calculoForro}</td>
           <td>${detalheForro.toLocaleString("pt-BR")}</td>
         </tr>

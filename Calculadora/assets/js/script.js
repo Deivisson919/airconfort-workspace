@@ -3,6 +3,7 @@ let detalheArea = 0;
 let detalhePessoas = 0;
 let detalheEletronicos = 0;
 let detalhePortas = 0;
+let detalheFrequencia = 0;
 let detalheJanelas = 0;
 let detalheSol = 0;
 let detalheForro = 0;
@@ -14,10 +15,14 @@ let pessoas = 0;
 let eletronicos = 0;
 let portas = 0;
 let janelas  = 0;
+let btuPorta = 0;
+let fatorFrequencia = 1;
 let tipoJanela = "";
 let sol = "";
 let tipoPorta = ""; 
+let textoFrequencia = ""
 let frequenciaPorta = "";
+let textoPorta = "";
 let forro = "";
 let btuTotal = 0;
 let nomeAmbiente = "";
@@ -178,49 +183,57 @@ function calcularBTU() {
     (area * 600) +
     (pessoasExtra * 600) +
     (eletronicos * 600) +
-    detalhePortas
-
+    detalhePortas +
+    detalheFrequencia;
     
-detalhePortas = 0;
-calculoPortas = "Sem portas";
-
-  let btuPorta = 0; 
-  let fatorFrequencia = 1;
-
+  btuPorta = 0; 
+  fatorFrequencia = 1;
+  textoPorta = "Portas";
+  textoFrequencia = ""
 if (portas > 0 && tipoPorta && frequenciaPorta) {
 
 
   if (tipoPorta === "comum") {
+    textoPorta = "Porta comum";
       btuPorta	= 400;
   }
 
   if (tipoPorta === "vidro"){
+    textoPorta = "Porta de vidro";
     btuPorta = 800;
   }
   
   if (tipoPorta === "vitrine"){
+    textoPorta = "Porta vitrine";
     btuPorta = 800;
   }
 
   if (tipoPorta === "automatica"){
+    textoPorta = "Porta automática de vidro";
     btuPorta = 1500;
   }
+
+    detalhePortas = portas * btuPorta
+
 
   // frequencia abertura
   if (frequenciaPorta === "baixa"){
       fatorFrequencia = 1;
+      textoFrequencia = "Baixa: 0% de acréscimo";
   }
 
   if (frequenciaPorta === "media"){
       fatorFrequencia = 1.25;
+      textoFrequencia = "Média: 25% de acréscimo";
   }
 
   if (frequenciaPorta === "alta") {
     fatorFrequencia = 1.5;
+    textoFrequencia = "Alta: 50% de acréscimo";
   }
 
-  detalhePortas = portas * btuPorta * fatorFrequencia;
-  calculoPortas = `${portas} portas(s)`;
+  detalheFrequencia = detalhePortas * (fatorFrequencia);
+
 
 }
 
@@ -307,6 +320,7 @@ if (portas > 0 && tipoPorta && frequenciaPorta) {
 
 function calcularMemorial() {
 
+  
   let pessoasExtra = pessoas > 1 ? pessoas - 1 : 0;
 
   
@@ -314,7 +328,7 @@ function calcularMemorial() {
     (area * 600) +
     (pessoasExtra * 600) +
     (eletronicos * 600) +
-    detalhePortas;
+    detalhePortas + detalheFrequencia;
 
   // DETALHES
   detalheArea = area * 600;
@@ -409,6 +423,58 @@ function calcularMemorial() {
 
     btuMemorial += detalheForro;
   }
+
+  btuPorta = 0; 
+  fatorFrequencia = 1;
+  textoPorta = "Sem porta";
+  textoFrequencia = "";
+if (portas > 0 && tipoPorta && frequenciaPorta) {
+
+
+  if (tipoPorta === "comum") {
+    textoPorta = "Porta comum";
+      btuPorta	= 400;
+  }
+
+  if (tipoPorta === "vidro"){
+    textoPorta = "Porta de vidro";
+    btuPorta = 800;
+  }
+  
+  if (tipoPorta === "vitrine"){
+    textoPorta = "Porta vitrine";
+    btuPorta = 800;
+  }
+
+  if (tipoPorta === "automatica"){
+    textoPorta = "Porta automática de vidro";
+    btuPorta = 1500;
+  }
+
+      detalhePortas = portas * btuPorta
+
+
+  if (frequenciaPorta === "baixa"){
+      fatorFrequencia = 1;
+      textoFrequencia = "Baixa: 0% de acréscimo";
+  }
+
+  if (frequenciaPorta === "media"){
+      fatorFrequencia = 1.25;
+      textoFrequencia = "Média: 25% de acréscimo";
+  }
+
+  if (frequenciaPorta === "alta") {
+    fatorFrequencia = 1.5;
+    textoFrequencia = "Alta: 50% de acréscimo";
+  }
+
+  detalheFrequencia = detalhePortas * (fatorFrequencia);
+
+
+}
+
+
 
   return Math.ceil(btuMemorial);
 }
@@ -999,7 +1065,7 @@ function acaoBotao(){
   else {
 
     if(!calcularBTU()) return;
-
+      calcularMemorial();
       salvarProjeto();
       carregarHistorico();
       criarPDF();
@@ -1279,10 +1345,9 @@ function validarDistribuicao() {
 
 const btnGerarPDF = document.getElementById("btnConfirmarPDF");
 
-btnConfirmarPDF.addEventListener("click", () => {
+btnConfirmarPDF.addEventListener("click", async () => {
 
-  nomeCliente =
-  document.getElementById("nomeCliente").value.trim();
+  nomeCliente = document.getElementById("nomeCliente").value.trim();
 
   if (rec.tipo === "distribuicao") {
 
@@ -1292,10 +1357,9 @@ btnConfirmarPDF.addEventListener("click", () => {
       if (!distribuicaoFinal) {
           return;
       }
-
   }
 
-  gerarPDF();
+  await gerarPDF();
   fecharModalPDF();
 
 });
