@@ -128,6 +128,7 @@ function montarPDF() {
   const config = obterConfiguracoesPDF();
   const logoPDF = config.logo || "Calculadora/assets/Images/img-header.png";
 
+
   pdfArea.innerHTML = `
 
   <div class="pdf-page">
@@ -174,7 +175,7 @@ function montarPDF() {
 
               <span class = "titulo">Responsável Técnico:</span>
 
-              <span class = "nome"> ${config.responsavel}</span>
+              <span class = "nome"> ${config.responsavel || "Configure em Configurações"}</span>
 
               <span class = "crea">${config.crea}</span>
 
@@ -248,17 +249,32 @@ function montarPDF() {
 
     </div>
 
+    <div class="box-observacao">
+
+      <div class="observacao-topo">
+        <img src="Calculadora/assets/Images/observacao.png" alt = "OBS">
+        <h3>OBSERVAÇÕES</h3>
+      </div>
+
+      <p>
+        Cálculo baseado em fatores médios de carga térmica conforme referências
+        ASHRAE, ABNT e práticas de engenharia aplicada em climatização.
+      </p>
+
+    </div>
+
+
     <!-- FOOTER -->
     <div class="pdf-footer">
 
       <div class="footer-item">
         <img src="Calculadora/assets/Images/telephone.png" alt="Area">
-        <span>${config.telefone}</span>
+        <span>${config.telefone || "Configure em Configurações"}</span>
       </div>
 
       <div class="footer-item">
         <img src="Calculadora/assets/Images/email.png" alt="Area">
-        <span>${config.email}</span>
+        <span>${config.email || "Configure em Configurações"}</span>
       </div>
 
     </div>
@@ -360,20 +376,7 @@ function montarPDF() {
       <h1>${resultadoFinal.toLocaleString("pt-BR")} BTUs</h1>
     </div>
 
-    <div class="box-observacao">
-
-      <div class="observacao-topo">
-        <img src="Calculadora/assets/Images/observacao.png" alt = "OBS">
-        <h3>OBSERVAÇÕES</h3>
-      </div>
-
-      <p>
-        Cálculo baseado em fatores médios de carga térmica conforme referências
-        ASHRAE, ABNT e práticas de engenharia aplicada em climatização.
-      </p>
-
-    </div>
-
+    
   </div>
 
 </div>
